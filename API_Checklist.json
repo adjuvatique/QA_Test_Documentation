@@ -1,0 +1,11 @@
+{
+  "API_Checklist": [
+    {
+      "Endpoint": "/api/login",
+      "Tests": [
+        "Status Code 200 if data valid",
+        "Status Code 401 if invalid datas"
+      ]
+    }
+  ]
+}
