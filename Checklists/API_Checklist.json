@@ -1,11 +1,107 @@
 {
-  "API_Checklist": [
-    {
-      "Endpoint": "/api/login",
-      "Tests": [
-        "Status Code 200 if data valid",
-        "Status Code 401 if invalid datas"
-      ]
-    }
-  ]
+  "API_Testing_Checklist": {
+    "metadata": {
+      "Project": "E-Commerce API",
+      "Version": "v2.1.3",
+      "Owner": "A_B",
+      "LastUpdated": "2024-06-25",
+      "Environment": "Staging"
+    },
+    "authentication": [
+      {
+        "Endpoint": "/api/auth/login",
+        "Methods": ["POST"],
+        "TestCases": [
+          {
+            "ID": "AUTH-01",
+            "Description": "Successful login with valid credentials",
+            "Request": {
+              "body": {
+                "username": "valid_user",
+                "password": "ValidPass123!"
+              }
+            },
+            "Expected": {
+              "status_code": 200,
+              "response": {
+                "token": "[JWT]",
+                "expires_in": 3600
+              }
+            }
+          },
+          {
+            "ID": "AUTH-02",
+            "Description": "Login with invalid password",
+            "Request": {
+              "body": {
+                "username": "valid_user",
+                "password": "wrong_pass"
+              }
+            },
+            "Expected": {
+              "status_code": 401,
+              "response": {
+                "error": "Invalid credentials"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "crud_operations": [
+      {
+        "Endpoint": "/api/products/{id}",
+        "Methods": ["GET", "PUT", "DELETE"],
+        "TestCases": [
+          {
+            "ID": "CRUD-01",
+            "Description": "Get product details",
+            "Request": {
+              "method": "GET",
+              "path_params": {"id": 123}
+            },
+            "Expected": {
+              "status_code": 200,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "number"},
+                  "name": {"type": "string"},
+                  "price": {"type": "number"}
+                },
+                "required": ["id", "name", "price"]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "security": [
+      {
+        "Test": "SQL Injection attempt",
+        "Endpoint": "/api/search",
+        "Payload": {
+          "query": "1' OR '1'='1"
+        },
+        "Expected": {
+          "status_code": 400,
+          "response": {"error": "Invalid input"}
+        }
+      }
+    ],
+    "performance": {
+      "thresholds": {
+        "max_response_time": "500ms",
+        "error_rate": "<0.1%",
+        "throughput": "1000 RPM"
+      }
+    },
+    "validation_rules": [
+      {
+        "ID": "VAL-01",
+        "Description": "All POST/PUT requests must include Content-Type header",
+        "Required": true
+      }
+    ]
+  }
 }
